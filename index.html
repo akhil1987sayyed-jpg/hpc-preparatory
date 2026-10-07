@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>समग्र प्रगती पत्रक (HPC) - Preparatory Stage | A4 Print Ready</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Mukta', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+      font-size: 13.5px;
+      line-height: 1.35;
+    }
+    input, select, textarea {
+      border: 1px solid #cbd5e1;
+      border-radius: 0.375rem;
+      padding: 0.25rem 0.45rem;
+      outline: none;
+      transition: all 0.2s;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: #ea580c;
+      box-shadow: 0 0 0 2px rgba(234, 88, 12, 0.25);
+    }
+    label {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #334155;
+    }
+    .tab-btn.active {
+      background-color: #ea580c !important;
+      color: #ffffff !important;
+      border-color: #ea580c !important;
+      font-weight: 800;
+    }
+    .student-pill.active {
+      background-color: #c2410c !important;
+      color: #ffffff !important;
+      border-color: #9a3412 !important;
+      font-weight: 800;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    /* A4 Size Print Rules */
+    @page {
+      size: A4 portrait;
+      margin: 6mm 8mm 6mm 8mm;
+    }
+
+    @media print {
+      html, body {
+        background-color: #ffffff !important;
+        font-size: 10pt !important;
+        line-height: 1.2 !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        color: #000000 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .tab-content {
+        display: block !important;
+      }
+      .card-container {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+      }
+      .a4-page {
+        page-break-after: always !important;
+        break-after: page !important;
+        display: block !important;
+        height: 275mm !important;
+        max-height: 275mm !important;
+        box-sizing: border-box !important;
+        padding: 2mm 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+      }
+      .a4-page:last-child {
+        page-break-after: auto !important;
+        break-after: auto !important;
+      }
+      .batch-separator {
+        page-break-before: always !important;
+        break-before: page !important;
+      }
+      input, textarea, select {
+        border-color: #64748b !important;
+        background: transparent !important;
+        font-size: 9.5pt !important;
+        font-weight: 600 !important;
+        padding: 1px 2px !important;
+        color: #000000 !important;
+      }
+      label {
+        font-size: 9.5pt !important;
+        font-weight: 700 !important;
+        color: #000000 !important;
+      }
+      table {
+        font-size: 9pt !important;
+      }
+      th, td {
+        padding: 1.5px 2px !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-16">
+
+  <!-- शीर्ष पट्टी (Header) -->
+  <header class="no-print sticky top-0 z-40 bg-orange-600 text-white shadow-md">
+    <div class="max-w-6xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center space-x-2.5">
+        <span class="text-3xl font-black bg-white text-orange-600 px-2.5 py-0.5 rounded shadow">HPC</span>
+        <div>
+          <h1 class="font-extrabold text-lg leading-tight">समग्र प्रगती पत्रक (Holistic Progress Card)</h1>
+          <p class="text-xs text-orange-100 font-medium">तयारीचा स्तर (इयत्ता ३ री ते ५ वी) | एनसीईआरटी - परख</p>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 text-xs">
+        <button type="button" onclick="addNewStudent()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold px-3 py-1.5 rounded shadow flex items-center gap-1 transition">
+          ➕ नवीन विद्यार्थी जोडा
+        </button>
+        <button type="button" onclick="saveCurrentStudentData(true)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded shadow flex items-center gap-1 transition">
+          💾 जतन करा (Save)
+        </button>
+        <button type="button" onclick="exportDataJSON()" class="bg-slate-700 hover:bg-slate-800 text-white font-semibold px-2.5 py-1.5 rounded shadow transition">
+          📥 बॅकअप (JSON)
+        </button>
+        <button type="button" onclick="printCurrentStudent()" class="bg-purple-700 hover:bg-purple-800 text-white font-bold px-3.5 py-1.5 rounded shadow flex items-center gap-1 transition">
+          🖨️ A4 प्रिंट (चालू विद्यार्थी)
+        </button>
+        <button type="button" onclick="printAllStudents()" class="bg-slate-900 hover:bg-black text-white font-bold px-3.5 py-1.5 rounded shadow flex items-center gap-1 transition">
+          📚 सर्व ५ विद्यार्थी A4 प्रिंट
+        </button>
+      </div>
+    </div>
+
+    <!-- विद्यार्थी निवड पट्टी (Ribbon) -->
+    <div class="bg-orange-700 px-4 py-2 border-t border-orange-500/60">
+      <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2 overflow-x-auto py-0.5" id="studentPillsContainer"></div>
+        <div class="flex items-center gap-2">
+          <span class="text-orange-100 font-medium">सध्या निवडलेला विद्यार्थी:</span>
+          <span id="activeStudentBadge" class="bg-white text-orange-950 px-2.5 py-0.5 rounded-md font-bold shadow">१. आरव</span>
+          <button type="button" onclick="deleteCurrentStudent()" class="bg-rose-600 hover:bg-rose-700 text-white px-2 py-0.5 rounded text-xs font-bold transition">
+            🗑️ हटवा
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- टॅब नेव्हिगेशन -->
+  <nav class="no-print max-w-5xl mx-auto mt-4 px-4">
+    <div class="bg-white p-1.5 rounded-xl shadow border border-slate-200 flex flex-wrap gap-1.5 text-xs font-bold text-slate-700">
+      <button type="button" onclick="switchTab('tab-a1', this)" class="tab-btn active px-3 py-1.5 rounded-lg border border-transparent hover:bg-orange-50 transition">
+        पान १: सर्वसाधारण माहिती
+      </button>
+      <button type="button" onclick="switchTab('tab-a2', this)" class="tab-btn px-3 py-1.5 rounded-lg border border-transparent hover:bg-orange-50 transition">
+        पान २: मी व माझा परिसर
+      </button>
+      <button type="button" onclick="switchTab('tab-a3', this)" class="tab-btn px-3 py-1.5 rounded-lg border border-transparent hover:bg-orange-50 transition">
+        पान ३: ३६०° मूल्यमापन
+      </button>
+      <button type="button" onclick="switchTab('tab-b', this)" class="tab-btn px-3 py-1.5 rounded-lg border border-transparent hover:bg-orange-50 transition">
+        पान ४: आकारिक मूल्यमापन
+      </button>
+      <button type="button" onclick="switchTab('tab-c', this)" class="tab-btn px-3 py-1.5 rounded-lg border border-transparent hover:bg-orange-50 transition">
+        पान ५: वार्षिक सारांश व क्रेडिट्स
+      </button>
+    </div>
+  </nav>
+
+  <!-- मुख्य फॉर्म कंटेनर -->
+  <main class="max-w-5xl mx-auto my-4 px-4" id="printableCardContainer">
+    <div id="hpcForm" class="card-container bg-white rounded-xl shadow-lg border border-orange-200 p-5 md:p-8 space-y-6">
+
+      <!-- ==================== A4 पान १: भाग अ (१) सर्वसाधारण माहिती ==================== -->
+      <div id="tab-a1" class="tab-content a4-page space-y-2">
+        <div class="text-center border-b border-orange-400 pb-1.5">
+          <div class="flex justify-between items-center text-[10.5px] font-bold text-gray-600 mb-0.5">
+            <span>विद्ययाऽमृतमश्नुते</span>
+            <span class="bg-orange-100 text-orange-800 px-2 py-0.5 rounded-full border border-orange-300">परख (PARAKH)</span>
+            <span>शालेय शिक्षण व साक्षरता विभाग, भारत सरकार</span>
+          </div>
+          <h2 class="text-lg md:text-xl font-extrabold text-orange-700 leading-tight">समग्र प्रगती पत्रक (HPC)</h2>
+          <h3 class="text-[11px] md:text-xs font-bold text-gray-800">तयारीचा स्तर (Preparatory Stage : इयत्ता ३ री ते ५ वी)</h3>
+        </div>
+
+        <h3 class="text-xs md:text-sm font-bold text-orange-800 border-b pb-0.5">भाग अ (१) : सर्वसाधारण माहिती</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-2 text-xs">
+          <div class="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-1.5">
+            <div class="md:col-span-2">
+              <label class="block mb-0.5">शाळेचे नाव (Name of School):</label>
+              <input type="text" id="schoolName" class="w-full font-medium" placeholder="शाळेचे नाव प्रविष्ट करा">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block mb-0.5">शाळेचा पत्ता (Address of School):</label>
+              <input type="text" id="schoolAddress" class="w-full font-medium" placeholder="शाळेचा पत्ता">
+            </div>
+            <div>
+              <label class="block mb-0.5">गाव / प्रभाग (Village/Ward):</label>
+              <input type="text" id="village" class="w-full">
+            </div>
+            <div>
+              <label class="block mb-0.5">बी.आर.सी. / सी.आर.सी. (BRC / CRC):</label>
+              <input type="text" id="brcCrc" class="w-full">
+            </div>
+            <div>
+              <label class="block mb-0.5">जिल्हा व राज्य (District & State):</label>
+              <input type="text" id="distState" class="w-full">
+            </div>
+            <div>
+              <label class="block mb-0.5">युडायस नंबर (UDISE+ Code):</label>
+              <input type="text" id="udise" class="w-full font-semibold">
+            </div>
+          </div>
+
+          <!-- विद्यार्थ्याचा फोटो -->
+          <div class="flex flex-col items-center justify-center p-1.5 border border-dashed border-gray-300 rounded bg-gray-50">
+            <div id="photoPreview" class="w-20 h-24 border border-gray-300 bg-white flex items-center justify-center text-[10px] font-semibold text-gray-400 rounded overflow-hidden mb-1">
+              फोटो
+            </div>
+            <label class="no-print text-[10px] bg-orange-600 hover:bg-orange-700 text-white px-2 py-0.5 rounded cursor-pointer font-bold shadow transition">
+              फोटो निवडा
+              <input type="file" accept="image/*" class="hidden" onchange="previewPhoto(event)">
+            </label>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-1.5 text-xs bg-orange-50/60 p-2 rounded border border-orange-200">
+          <div class="md:col-span-2">
+            <label class="block mb-0.5">विद्यार्थ्याचे नाव (Student Name):</label>
+            <input type="text" id="studentName" oninput="syncStudentName()" class="w-full font-bold text-orange-950">
+          </div>
+          <div>
+            <label class="block mb-0.5">जन्म दिनांक (DOB):</label>
+            <input type="date" id="dob" class="w-full font-medium">
+          </div>
+          <div>
+            <label class="block mb-0.5">अपार आय.डी. (APAAR ID):</label>
+            <input type="text" id="apaarId" class="w-full font-semibold">
+          </div>
+          <div>
+            <label class="block mb-0.5">लिंग (Gender):</label>
+            <select id="gender" class="w-full font-medium">
+              <option value="मुलगा">मुलगा</option>
+              <option value="मुलगी">मुलगी</option>
+              <option value="इतर">इतर</option>
+            </select>
+          </div>
+          <div>
+            <label class="block mb-0.5">इयत्ता (Grade):</label>
+            <select id="grade" class="w-full font-bold text-orange-800" onchange="updateCreditTable()">
+              <option value="3">इयत्ता ३ री</option>
+              <option value="4">इयत्ता ४ थी</option>
+              <option value="5">इयत्ता ५ वी</option>
+            </select>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block mb-0.5">तुकडी आणि हजेरी क्रमांक:</label>
+            <div class="flex gap-1.5">
+              <input type="text" id="section" class="w-1/2 font-medium" placeholder="तुकडी">
+              <input type="text" id="rollNo" class="w-1/2 font-bold" placeholder="हजेरी क्र.">
+            </div>
+          </div>
+        </div>
+
+        <!-- उपस्थिती तक्ता -->
+        <div>
+          <label class="block text-xs font-bold text-gray-800 mb-0.5">📅 उपस्थिती तपशील (माहे एप्रिल ते मार्च):</label>
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-center border border-gray-300 text-[10px]">
+              <thead class="bg-orange-100 font-bold text-gray-800">
+                <tr>
+                  <th class="border p-0.5 text-left w-16">महिने</th>
+                  <th class="border p-0.5">एप्रि</th><th class="border p-0.5">मे</th><th class="border p-0.5">जून</th>
+                  <th class="border p-0.5">जुलै</th><th class="border p-0.5">ऑग</th><th class="border p-0.5">सप्टें</th>
+                  <th class="border p-0.5">ऑक्टो</th><th class="border p-0.5">नोव्हें</th><th class="border p-0.5">डिसें</th>
+                  <th class="border p-0.5">जाने</th><th class="border p-0.5">फेब्रु</th><th class="border p-0.5">मार्च</th>
+                  <th class="border p-0.5 bg-orange-200">एकूण</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="border p-0.5 text-left font-bold bg-gray-50">कामाचे दिवस</td>
+                  <script>
+                    for(let i=0; i<12; i++){
+                      document.write(`<td class="border p-0"><input type="number" id="sch_day_${i}" class="w-7 text-center font-semibold p-0" oninput="calcAtt()"></td>`);
+                    }
+                  </script>
+                  <td id="totalSchoolDays" class="border p-0.5 font-extrabold bg-orange-50">0</td>
+                </tr>
+                <tr>
+                  <td class="border p-0.5 text-left font-bold bg-gray-50">उपस्थित दिवस</td>
+                  <script>
+                    for(let i=0; i<12; i++){
+                      document.write(`<td class="border p-0"><input type="number" id="pre_day_${i}" class="w-7 text-center font-semibold p-0" oninput="calcAtt()"></td>`);
+                    }
+                  </script>
+                  <td id="totalPresentDays" class="border p-0.5 font-extrabold bg-orange-50">0</td>
+                </tr>
+                <tr>
+                  <td class="border p-0.5 text-left font-bold bg-gray-50">उपस्थिती %</td>
+                  <script>
+                    for(let i=0; i<12; i++){
+                      document.write(`<td id="att_perc_${i}" class="border p-0.5 text-[8.5px] font-bold text-gray-700">-</td>`);
+                    }
+                  </script>
+                  <td id="totalAttPerc" class="border p-0.5 font-extrabold text-orange-800 bg-orange-100">0%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- आवडीनिवडी (पान १ वर पूर्णपणे बसेल अशी संक्षिप्त मांडणी) -->
+        <div class="p-2 bg-amber-50/70 rounded border border-amber-200 text-xs">
+          <span class="font-extrabold text-amber-950 block mb-1">⭐ आवडीनिवडी (माझी आवड - I am interested in):</span>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-1 text-[11px] font-medium">
+            <label class="flex items-center gap-1"><input type="checkbox" id="int_read" class="w-3.5 h-3.5"> वाचन (Reading)</label>
+            <label class="flex items-center gap-1"><input type="checkbox" id="int_dance" class="w-3.5 h-3.5"> नृत्य / गायन / वादन</label>
+            <label class="flex items-center gap-1"><input type="checkbox" id="int_sports" class="w-3.5 h-3.5"> क्रीडा / खेळ (Sports)</label>
+            <label class="flex items-center gap-1"><input type="checkbox" id="int_writing" class="w-3.5 h-3.5"> सर्जनशील लेखन</label>
+            <label class="flex items-center gap-1"><input type="checkbox" id="int_garden" class="w-3.5 h-3.5"> बागकाम (Gardening)</label>
+            <label class="flex items-center gap-1"><input type="checkbox" id="int_yoga" class="w-3.5 h-3.5"> योगाभ्यास (Yoga)</label>
+            <label class="flex items-center gap-1"><input type="checkbox" id="int_art" class="w-3.5 h-3.5"> कला व हस्तकला</label>
+            <label class="flex items-center gap-1"><input type="checkbox" id="int_cooking" class="w-3.5 h-3.5"> पाककला / घरकाम</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== A4 पान २: भाग अ (२) मी व माझा परिसर ==================== -->
+      <div id="tab-a2" class="tab-content hidden a4-page space-y-3.5">
+        <h3 class="text-sm md:text-base font-bold text-emerald-800 border-b pb-1">भाग अ (२) : मी व माझा परिसर (Things About Me)</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <div class="space-y-2 bg-emerald-50/50 p-2.5 rounded border border-emerald-200">
+            <div>
+              <label class="block mb-0.5">माझे कुटुंब (My Family वर्णन):</label>
+              <textarea id="myFamily" rows="2" class="w-full" placeholder="कुटुंबाविषयी माहिती..."></textarea>
+            </div>
+            <div>
+              <label class="block mb-0.5">मोठे होऊन मला व्हायचे आहे (Ambition):</label>
+              <input type="text" id="myAmbition" class="w-full">
+            </div>
+            <div>
+              <label class="block mb-0.5">माझे प्रेरणास्थान (My Idol):</label>
+              <input type="text" id="myIdol" class="w-full">
+            </div>
+          </div>
+
+          <div class="space-y-2 bg-emerald-50/50 p-2.5 rounded border border-emerald-200">
+            <div>
+              <label class="block mb-0.5">मी यात उत्तम आहे (I am good at):</label>
+              <input type="text" id="goodAt" class="w-full">
+            </div>
+            <div>
+              <label class="block mb-0.5">मला या कौशल्यात सुधारणा करायची आहे:</label>
+              <input type="text" id="improveSkill" class="w-full">
+            </div>
+            <div>
+              <label class="block mb-0.5">माझी आवड / नावड (Like / Don't like):</label>
+              <input type="text" id="likeDislike" class="w-full">
+            </div>
+          </div>
+
+          <div class="space-y-2 bg-emerald-50/50 p-2.5 rounded border border-emerald-200">
+            <span class="font-bold text-emerald-950 block border-b pb-0.5 text-xs">माझ्या आवडत्या गोष्टी (Favorite Things):</span>
+            <div>
+              <label class="block mb-0.5">आवडता खाद्यपदार्थ (Food):</label>
+              <input type="text" id="favFood" class="w-full">
+            </div>
+            <div>
+              <label class="block mb-0.5">आवडते खेळ (Games):</label>
+              <input type="text" id="favGames" class="w-full">
+            </div>
+            <div>
+              <label class="block mb-0.5">आवडते सण (Festivals):</label>
+              <input type="text" id="favFestivals" class="w-full">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== A4 पान ३: भाग अ (३) ३६०° त्रिमितीय मूल्यमापन ==================== -->
+      <div id="tab-a3" class="tab-content hidden a4-page space-y-3">
+        <h3 class="text-sm md:text-base font-bold text-sky-800 border-b pb-1">भाग अ (३) : त्रिमितीय मूल्यमापन (३६०° अभिप्राय)</h3>
+
+        <div class="bg-sky-50/60 p-2.5 rounded border border-sky-200 text-xs">
+          <h4 class="font-extrabold text-sky-950 mb-1 text-xs">१. शाळेत मला कसे वाटते? (स्वयं-मूल्यांकन - How do I feel at school?)</h4>
+          <div class="space-y-1" id="selfQuestions"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+          <div class="bg-indigo-50/60 p-2 rounded border border-indigo-200">
+            <h4 class="font-extrabold text-indigo-950 mb-1">२. सहाध्यायी अभिप्राय १ (Peer Feedback 1)</h4>
+            <input type="text" id="peer1Name" placeholder="मित्राचे नाव प्रविष्ट करा" class="w-full mb-1">
+            <div class="space-y-1" id="peer1Questions"></div>
+          </div>
+
+          <div class="bg-indigo-50/60 p-2 rounded border border-indigo-200">
+            <h4 class="font-extrabold text-indigo-950 mb-1">३. सहाध्यायी अभिप्राय २ (Peer Feedback 2)</h4>
+            <input type="text" id="peer2Name" placeholder="मित्राचे नाव प्रविष्ट करा" class="w-full mb-1">
+            <div class="space-y-1" id="peer2Questions"></div>
+          </div>
+        </div>
+
+        <div class="bg-purple-50/60 p-2 rounded border border-purple-200 text-xs">
+          <h4 class="font-extrabold text-purple-950 mb-1 text-xs">४. पालकांचे मत (पालक सहभाग - Your Child Matters!)</h4>
+          <div class="space-y-1" id="parentQuestions"></div>
+        </div>
+      </div>
+
+      <!-- ==================== A4 पान ४: भाग ब आकारिक मूल्यमापन ==================== -->
+      <div id="tab-b" class="tab-content hidden a4-page space-y-2.5">
+        <div class="border-b pb-0.5">
+          <h3 class="text-sm md:text-base font-bold text-orange-900">भाग ब : आकारिक मूल्यमापन चौकट (Formative Assessment Framework)</h3>
+          <p class="text-[11px] text-gray-600 font-medium">६ विषयांकरिता अध्ययन निष्पत्ती, निकष (Rubric) व शिक्षकांच्या नोंदी</p>
+        </div>
+        <div id="subjectsContainer" class="space-y-2"></div>
+      </div>
+
+      <!-- ==================== A4 पान ५: भाग क वार्षिक सारांश व क्रेडिट्स ==================== -->
+      <div id="tab-c" class="tab-content hidden a4-page space-y-3">
+        <h3 class="text-sm md:text-base font-bold text-rose-900 border-b pb-1">भाग क : शैक्षणिक वर्षाचा सारांश आणि क्रेडिट गुण</h3>
+        
+        <div class="overflow-x-auto">
+          <table class="min-w-full border border-gray-300 text-xs">
+            <thead class="bg-rose-100 text-rose-950 font-bold">
+              <tr>
+                <th class="border p-1 text-left">विषय</th>
+                <th class="border p-1">जाणीव (Awareness)</th>
+                <th class="border p-1">संवेदनशीलता (Sensitivity)</th>
+                <th class="border p-1">सर्जनशीलता (Creativity)</th>
+                <th class="border p-1 text-left">शिक्षकांची नोंद</th>
+              </tr>
+            </thead>
+            <tbody id="summaryTableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- क्रेडिट तक्ता -->
+        <div class="bg-amber-50 p-2.5 rounded border border-amber-300">
+          <h4 class="font-extrabold text-amber-950 text-xs mb-1">🎓 राष्ट्रीय क्रेडिट चौकट (NCrF) क्रेडिट्स</h4>
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-center border border-amber-300 bg-white text-xs">
+              <thead class="bg-amber-100 font-bold text-gray-800">
+                <tr>
+                  <th class="border p-1 text-left">विषय</th>
+                  <th class="border p-1">HPC क्रेडिट्स (७०%)</th>
+                  <th class="border p-1">NCrF स्तर</th>
+                  <th class="border p-1">क्रेडिट पॉइंट्स</th>
+                  <th class="border p-1 text-emerald-800">प्राप्त गुण</th>
+                </tr>
+              </thead>
+              <tbody id="creditTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- स्वाक्षरी -->
+        <div class="grid grid-cols-3 gap-6 pt-6 text-center text-xs font-bold text-gray-800">
+          <div>
+            <div class="h-8 border-b border-gray-400 mb-1"></div>
+            <span>वर्गशिक्षक स्वाक्षरी</span>
+          </div>
+          <div>
+            <div class="h-8 border-b border-gray-400 mb-1"></div>
+            <span>पालकांची स्वाक्षरी</span>
+          </div>
+          <div>
+            <div class="h-8 border-b border-gray-400 mb-1"></div>
+            <span>मुख्याध्यापक स्वाक्षरी व शिक्का</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    const DEFAULT_5_STUDENTS = [
+      {
+        studentName: "आरव संतोष गायकवाड",
+        rollNo: "०१",
+        dob: "2016-05-12",
+        gender: "मुलगा",
+        grade: "3",
+        section: "अ",
+        apaarId: "8899-7744-1101",
+        schoolName: "जि. प. प्राथमिक शाळा, लवंगा",
+        schoolAddress: "मु. पो. लवंगा, ता. औसा, जि. लातूर",
+        village: "लवंगा",
+        brcCrc: "औसा केंद्र",
+        distState: "लातूर, महाराष्ट्र",
+        udise: "27240800101",
+        myFamily: "आई, बाबा, आजी, आजोबा आणि मी.",
+        myAmbition: "वैमानिक (Pilot)",
+        myIdol: "डॉ. ए. पी. जे. अब्दुल कलाम",
+        goodAt: "चित्रकला व गोष्टी सांगणे",
+        improveSkill: "भागाकार व इंग्रजी वाचन",
+        likeDislike: "मित्रांसोबत खेळायला आवडते.",
+        favFood: "पुरणपोळी",
+        favGames: "खो-खो व लपंडाव",
+        favFestivals: "दिवाळी व गणेशोत्सव"
+      },
+      {
+        studentName: "सिया सचिन जोशी",
+        rollNo: "०२",
+        dob: "2016-08-20",
+        gender: "मुलगी",
+        grade: "3",
+        section: "अ",
+        apaarId: "8899-7744-1102",
+        schoolName: "जि. प. प्राथमिक शाळा, लवंगा",
+        schoolAddress: "मु. पो. लवंगा, ता. औसा, जि. लातूर",
+        village: "लवंगा",
+        brcCrc: "औसा केंद्र",
+        distState: "लातूर, महाराष्ट्र",
+        udise: "27240800101",
+        myFamily: "आई, बाबा, मोठा भाऊ आणि मी.",
+        myAmbition: "शिक्षिका (Teacher)",
+        myIdol: "सावित्रीबाई फुले",
+        goodAt: "सुंदर हस्ताक्षर व गायन",
+        improveSkill: "सायकल चालवणे",
+        likeDislike: "अभ्यास करायला आवडतो.",
+        favFood: "वरण-भात आणि मोदक",
+        favGames: "लंगडी आणि बॅडमिंटन",
+        favFestivals: "मकर संक्रांत"
+      },
+      {
+        studentName: "कबीर राहुल शिंदे",
+        rollNo: "०३",
+        dob: "2016-03-15",
+        gender: "मुलगा",
+        grade: "4",
+        section: "ब",
+        apaarId: "8899-7744-1103",
+        schoolName: "जि. प. प्राथमिक शाळा, लवंगा",
+        schoolAddress: "मु. पो. लवंगा, ता. औसा, जि. लातूर",
+        village: "लवंगा",
+        brcCrc: "औसा केंद्र",
+        distState: "लातूर, महाराष्ट्र",
+        udise: "27240800101",
+        myFamily: "आई, बाबा व लहान बहीण.",
+        myAmbition: "शास्त्रज्ञ (Scientist)",
+        myIdol: "होमी भाभा",
+        goodAt: "गणित व कोडी सोडवणे",
+        improveSkill: "हस्ताक्षर सुधारणे",
+        likeDislike: "निसर्गात फिरायला आवडते.",
+        favFood: "पावभाजी",
+        favGames: "क्रिकेट",
+        favFestivals: "होळी"
+      },
+      {
+        studentName: "अनघा गजानन कुलकर्णी",
+        rollNo: "०४",
+        dob: "2016-11-10",
+        gender: "मुलगी",
+        grade: "4",
+        section: "अ",
+        apaarId: "8899-7744-1104",
+        schoolName: "जि. प. प्राथमिक शाळा, लवंगा",
+        schoolAddress: "मु. पो. लवंगा, ता. औसा, जि. लातूर",
+        village: "लवंगा",
+        brcCrc: "औसा केंद्र",
+        distState: "लातूर, महाराष्ट्र",
+        udise: "27240800101",
+        myFamily: "आई, बाबा, आजी आणि मी.",
+        myAmbition: "डॉक्टर (Doctor)",
+        myIdol: "आनंदीबाई जोशी",
+        goodAt: "कविता वाचन व अभिनय",
+        improveSkill: "खेळातील चपळता",
+        likeDislike: "झाडांची काळजी घेणे.",
+        favFood: "गुलाबजाम",
+        favGames: "विटीदांडू व दोरीच्या उड्या",
+        favFestivals: "गुढीपाडवा"
+      },
+      {
+        studentName: "वेदांत नितीन पवार",
+        rollNo: "०५",
+        dob: "2015-12-05",
+        gender: "मुलगा",
+        grade: "5",
+        section: "अ",
+        apaarId: "8899-7744-1105",
+        schoolName: "जि. प. प्राथमिक शाळा, लवंगा",
+        schoolAddress: "मु. पो. लवंगा, ता. औसा, जि. लातूर",
+        village: "लवंगा",
+        brcCrc: "औसा केंद्र",
+        distState: "लातूर, महाराष्ट्र",
+        udise: "27240800101",
+        myFamily: "आई, बाबा आणि मी.",
+        myAmbition: "क्रीडापटू (Athlete)",
+        myIdol: "सचिन तेंडुलकर",
+        goodAt: "धावणे व मैदानी खेळ",
+        improveSkill: "एकाग्रता वाढवणे",
+        likeDislike: "मित्रांशी गप्पा मारायला आवडते.",
+        favFood: "भाकरी व मटकीची उसळ",
+        favGames: "कबड्डी",
+        favFestivals: "दसरा"
+      }
+    ];
+
+    let studentsDatabase = [];
+    let currentStudentIndex = 0;
+
+    const SUBJECTS = [
+      { id: "r1", title: "भाषा शिक्षण (R1 - मातृभाषा/प्रथम भाषा)", defaultCredit: 4.2 },
+      { id: "r2", title: "भाषा शिक्षण (R2 - द्वितीय भाषा)", defaultCredit: 4.4 },
+      { id: "math", title: "गणित शिक्षण (Mathematics Education)", defaultCredit: 4.3 },
+      { id: "tau", title: "आपला परिसर (The World Around Us)", defaultCredit: 4.6 },
+      { id: "art", title: "कला शिक्षण (Art Education)", defaultCredit: 2.3 },
+      { id: "pe", title: "शारीरिक शिक्षण व आरोग्य (Physical Education)", defaultCredit: 2.3 }
+    ];
+
+    const SELF_QUESTIONS = [
+      "१. मला माझ्या भावना (आनंद, राग, दुःख, आत्मविश्वास) व्यक्त करता येतात.",
+      "२. कठीण प्रसंगात मी स्वतःला शांत ठेवू शकतो/शकते.",
+      "३. मला माझ्या मित्रांच्या भावना समजतात.",
+      "४. मी इतरांच्या मतांचा व विचारांचा आदर करतो/करते.",
+      "५. भांडण झाल्यावर मी मित्रांमध्ये समेट घडवून आणण्यास मदत करतो/करते.",
+      "६. कोणी दुःखी असेल तर मी त्याला समजावण्याचा प्रयत्न करतो/करते.",
+      "७. मी शाळेत उत्तम कामगिरी करतो/करते."
+    ];
+
+    const PEER_QUESTIONS = [
+      "१. माझा मित्र स्वतःच्या भावना चांगल्या प्रकारे सांगू शकतो.",
+      "२. कठीण प्रसंगात स्वतःला शांत ठेवतो.",
+      "३. त्याला मित्रांच्या भावना समजतात.",
+      "४. इतरांच्या विचारांचा आदर करतो.",
+      "५. मित्रांना एकत्र आणण्यास मदत करतो.",
+      "६. कोणी दुःखी असल्यास समजूत काढतो."
+    ];
+
+    const PARENT_QUESTIONS = [
+      "१. पाल्याला शाळा व वर्ग सुरक्षित वाटतो.",
+      "२. पाल्य उपक्रमांत आवडीने सहभागी होतो.",
+      "३. अभ्यासक्रम कठीण वाटतो का?",
+      "४. समाधानकारक प्रगती करत आहे.",
+      "५. शाळेकडून आवश्यक ते सहकार्य मिळते."
+    ];
+
+    window.addEventListener("DOMContentLoaded", () => {
+      renderSurveyQuestions();
+      renderFormativeModules();
+      renderSummaryTable();
+      updateCreditTable();
+      initStudentsDatabase();
+    });
+
+    function createBlankStudent(index, sampleData = null) {
+      const base = {
+        studentName: sampleData ? sampleData.studentName : `विद्यार्थी ${index}`,
+        rollNo: sampleData ? sampleData.rollNo : (index < 10 ? `०${index}` : `${index}`),
+        dob: sampleData ? sampleData.dob : "2016-06-01",
+        gender: sampleData ? sampleData.gender : "मुलगा",
+        grade: sampleData ? sampleData.grade : "3",
+        section: sampleData ? sampleData.section : "अ",
+        apaarId: sampleData ? sampleData.apaarId : `8899-7744-110${index}`,
+        schoolName: sampleData ? sampleData.schoolName : "जि. प. प्राथमिक शाळा, लवंगा",
+        schoolAddress: sampleData ? sampleData.schoolAddress : "मु. पो. लवंगा, ता. औसा",
+        village: sampleData ? sampleData.village : "लवंगा",
+        brcCrc: sampleData ? sampleData.brcCrc : "औसा",
+        distState: sampleData ? sampleData.distState : "लातूर, महाराष्ट्र",
+        udise: sampleData ? sampleData.udise : "27240800101",
+        myFamily: sampleData ? sampleData.myFamily : "आई, बाबा आणि मी.",
+        myAmbition: sampleData ? sampleData.myAmbition : "शिक्षक",
+        myIdol: sampleData ? sampleData.myIdol : "आई-बाबा",
+        goodAt: sampleData ? sampleData.goodAt : "अभ्यास व खेळ",
+        improveSkill: sampleData ? sampleData.improveSkill : "हस्ताक्षर",
+        likeDislike: sampleData ? sampleData.likeDislike : "खेळायला आवडते",
+        favFood: sampleData ? sampleData.favFood : "वरण-भात",
+        favGames: sampleData ? sampleData.favGames : "खो-खो",
+        favFestivals: sampleData ? sampleData.favFestivals : "दिवाळी",
+        int_read: true,
+        int_sports: true
+      };
+
+      const workDays = [18, 24, 22, 21, 18, 22, 24, 23, 22, 23, 20, 0];
+      for (let i = 0; i < 12; i++) {
+        base[`sch_day_${i}`] = workDays[i];
+        base[`pre_day_${i}`] = Math.max(0, workDays[i] - (index % 3));
+      }
+
+      SUBJECTS.forEach(sub => {
+        base[`${sub.id}_goals`] = "मूलभूत संकल्पना व क्षमतांचा विकास करणे.";
+        base[`${sub.id}_activity`] = "प्रात्यक्षिक कृती, चित्रे व गटचर्चा घेणे.";
+        base[`${sub.id}_rub_aware`] = "प्रवीण (Proficient)";
+        base[`${sub.id}_rub_sens`] = "प्रवीण (Proficient)";
+        base[`${sub.id}_rub_creat`] = "प्रगत (Advanced)";
+        base[`${sub.id}_notes`] = "सक्रिय सहभाग व प्रगती समाधानकारक आहे.";
+
+        base[`sum_${sub.id}_aware`] = "प्रवीण";
+        base[`sum_${sub.id}_sens`] = "प्रवीण";
+        base[`sum_${sub.id}_creat`] = "प्रगत";
+        base[`sum_${sub.id}_note`] = "कामगिरी समाधानकारक आहे.";
+      });
+
+      return base;
+    }
+
+    function initStudentsDatabase() {
+      const saved = localStorage.getItem("hpc_preparatory_multi_students");
+      if (saved) {
+        try {
+          studentsDatabase = JSON.parse(saved);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      if (!studentsDatabase || studentsDatabase.length === 0) {
+        studentsDatabase = DEFAULT_5_STUDENTS.map((s, idx) => createBlankStudent(idx + 1, s));
+        saveAllToStorage();
+      }
+
+      currentStudentIndex = 0;
+      renderStudentPills();
+      loadStudentIntoForm(0);
+    }
+
+    function renderStudentPills() {
+      const container = document.getElementById("studentPillsContainer");
+      if (!container) return;
+      container.innerHTML = "";
+
+      studentsDatabase.forEach((std, idx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `student-pill px-2.5 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap transition border ${
+          idx === currentStudentIndex
+            ? "active bg-white text-orange-950 border-white shadow"
+            : "bg-orange-800/80 hover:bg-orange-800 text-orange-100 border-orange-600"
+        }`;
+        const sName = (std.studentName || `विद्यार्थी ${idx+1}`).split(" ")[0];
+        btn.textContent = `${idx + 1}. ${sName}`;
+        btn.onclick = () => switchStudent(idx);
+        container.appendChild(btn);
+      });
+
+      updateBadge();
+    }
+
+    function updateBadge() {
+      const current = studentsDatabase[currentStudentIndex];
+      const badge = document.getElementById("activeStudentBadge");
+      if (current && badge) {
+        badge.textContent = `${currentStudentIndex + 1}. ${current.studentName || 'विद्यार्थी'}`;
+      }
+    }
+
+    function addNewStudent() {
+      saveCurrentStudentData(false);
+      const newIndex = studentsDatabase.length + 1;
+      const newStudent = createBlankStudent(newIndex);
+      studentsDatabase.push(newStudent);
+      currentStudentIndex = studentsDatabase.length - 1;
+      saveAllToStorage();
+      renderStudentPills();
+      loadStudentIntoForm(currentStudentIndex);
+      alert(`नवीन विद्यार्थी #${newIndex} जोडला गेला.`);
+    }
+
+    function switchStudent(newIndex) {
+      if (newIndex < 0 || newIndex >= studentsDatabase.length) return;
+      saveCurrentStudentData(false);
+      currentStudentIndex = newIndex;
+      renderStudentPills();
+      loadStudentIntoForm(newIndex);
+    }
+
+    function deleteCurrentStudent() {
+      if (studentsDatabase.length <= 1) {
+        alert("यादीत किमान १ विद्यार्थी असणे आवश्यक आहे!");
+        return;
+      }
+      const sName = studentsDatabase[currentStudentIndex].studentName || `विद्यार्थी ${currentStudentIndex + 1}`;
+      if (confirm(`'${sName}' ची माहिती हटवायची आहे का?`)) {
+        studentsDatabase.splice(currentStudentIndex, 1);
+        if (currentStudentIndex >= studentsDatabase.length) {
+          currentStudentIndex = studentsDatabase.length - 1;
+        }
+        saveAllToStorage();
+        renderStudentPills();
+        loadStudentIntoForm(currentStudentIndex);
+      }
+    }
+
+    function saveCurrentStudentData(showAlert = true) {
+      if (!studentsDatabase[currentStudentIndex]) {
+        studentsDatabase[currentStudentIndex] = createBlankStudent(currentStudentIndex + 1);
+      }
+      const data = studentsDatabase[currentStudentIndex];
+      const inputs = document.querySelectorAll("input, select, textarea");
+      inputs.forEach(el => {
+        if (el.id) {
+          data[el.id] = el.type === "checkbox" ? el.checked : el.value;
+        }
+      });
+
+      saveAllToStorage();
+      if (showAlert) {
+        alert(`विद्यार्थी ${currentStudentIndex + 1} (${data.studentName}) ची माहिती जतन झाली!`);
+      }
+    }
+
+    function saveAllToStorage() {
+      localStorage.setItem("hpc_preparatory_multi_students", JSON.stringify(studentsDatabase));
+    }
+
+    function loadStudentIntoForm(index) {
+      const data = studentsDatabase[index];
+      if (!data) return;
+
+      Object.keys(data).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          if (el.type === "checkbox") {
+            el.checked = !!data[id];
+          } else {
+            el.value = data[id];
+          }
+        }
+      });
+
+      const preview = document.getElementById("photoPreview");
+      if (data.photoData) {
+        preview.innerHTML = `<img src="${data.photoData}" class="w-full h-full object-cover">`;
+      } else {
+        preview.innerHTML = `<span class="text-gray-400 text-[10px]">फोटो</span>`;
+      }
+
+      calcAtt();
+      updateCreditTable();
+      updateBadge();
+    }
+
+    function syncStudentName() {
+      const nameInp = document.getElementById("studentName");
+      if (nameInp && studentsDatabase[currentStudentIndex]) {
+        studentsDatabase[currentStudentIndex].studentName = nameInp.value;
+        updateBadge();
+        const pills = document.querySelectorAll(".student-pill");
+        if (pills[currentStudentIndex]) {
+          pills[currentStudentIndex].textContent = `${currentStudentIndex + 1}. ${(nameInp.value || 'विद्यार्थी').split(' ')[0]}`;
+        }
+      }
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.add('hidden');
+      });
+      const selected = document.getElementById(tabId);
+      if (selected) selected.classList.remove('hidden');
+
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+    }
+
+    function printCurrentStudent() {
+      saveCurrentStudentData(false);
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('hidden'));
+      window.print();
+    }
+
+    function printAllStudents() {
+      saveCurrentStudentData(false);
+      if (!confirm(`एकूण ${studentsDatabase.length} विद्यार्थ्यांचे प्रगतीपत्रक A4 पानांवर सलग प्रिंट करायचे आहे का?`)) return;
+
+      const origContainer = document.getElementById("printableCardContainer");
+      const backupIndex = currentStudentIndex;
+
+      const printWrapper = document.createElement("div");
+      printWrapper.id = "batchPrintWrapper";
+
+      studentsDatabase.forEach((std, i) => {
+        loadStudentIntoForm(i);
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('hidden'));
+
+        const clone = origContainer.cloneNode(true);
+        const origInputs = origContainer.querySelectorAll("input, textarea, select");
+        const cloneInputs = clone.querySelectorAll("input, textarea, select");
+        origInputs.forEach((inp, idx) => {
+          if (inp.type === "checkbox") cloneInputs[idx].checked = inp.checked;
+          else cloneInputs[idx].value = inp.value;
+        });
+
+        const pageDiv = document.createElement("div");
+        if (i > 0) pageDiv.className = "batch-separator";
+        pageDiv.appendChild(clone);
+        printWrapper.appendChild(pageDiv);
+      });
+
+      origContainer.style.display = "none";
+      document.body.appendChild(printWrapper);
+
+      setTimeout(() => {
+        window.print();
+        printWrapper.remove();
+        origContainer.style.display = "block";
+        currentStudentIndex = backupIndex;
+        loadStudentIntoForm(currentStudentIndex);
+        switchTab('tab-a1', document.querySelector('.tab-btn'));
+      }, 500);
+    }
+
+    function renderSurveyQuestions() {
+      document.getElementById("selfQuestions").innerHTML = SELF_QUESTIONS.map((q, idx) => `
+        <div class="flex justify-between items-center py-0.5 border-b border-sky-100">
+          <span class="font-medium">${q}</span>
+          <select id="self_q_${idx}" class="text-[10px] p-0.5 font-semibold">
+            <option value="होय">होय</option>
+            <option value="कधीकधी">कधीकधी</option>
+            <option value="नाही">नाही</option>
+          </select>
+        </div>
+      `).join("");
+
+      const renderPeer = (elId, prefix) => {
+        document.getElementById(elId).innerHTML = PEER_QUESTIONS.map((q, idx) => `
+          <div class="flex justify-between items-center py-0.5 border-b border-indigo-100">
+            <span class="font-medium">${q}</span>
+            <select id="${prefix}_q_${idx}" class="text-[10px] p-0.5 font-semibold">
+              <option value="होय">होय</option>
+              <option value="कधीकधी">कधीकधी</option>
+              <option value="नाही">नाही</option>
+            </select>
+          </div>
+        `).join("");
+      };
+      renderPeer("peer1Questions", "peer1");
+      renderPeer("peer2Questions", "peer2");
+
+      document.getElementById("parentQuestions").innerHTML = PARENT_QUESTIONS.map((q, idx) => `
+        <div class="flex justify-between items-center py-0.5 border-b border-purple-100">
+          <span class="font-medium">${q}</span>
+          <select id="parent_q_${idx}" class="text-[10px] p-0.5 font-semibold">
+            <option value="होय">होय</option>
+            <option value="कधीकधी">कधीकधी</option>
+            <option value="नाही">नाही</option>
+          </select>
+        </div>
+      `).join("");
+    }
+
+    function renderFormativeModules() {
+      const container = document.getElementById("subjectsContainer");
+      container.innerHTML = SUBJECTS.map(sub => `
+        <div class="border rounded p-1.5 bg-gray-50/70 text-xs space-y-1">
+          <div class="flex justify-between items-center border-b pb-0.5 font-bold text-gray-800 text-xs">
+            <span>${sub.title}</span>
+            <span class="text-[9.5px] px-1 py-0.2 rounded bg-orange-100 text-orange-800 font-semibold">HPC निकष</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-[10px]">
+            <div>
+              <label class="font-bold block mb-0.2">ध्येये व क्षमता:</label>
+              <textarea id="${sub.id}_goals" rows="1" class="w-full text-[10px] p-0.5"></textarea>
+            </div>
+            <div>
+              <label class="font-bold block mb-0.2">कृती व निष्पत्ती:</label>
+              <textarea id="${sub.id}_activity" rows="1" class="w-full text-[10px] p-0.5"></textarea>
+            </div>
+          </div>
+          <div class="bg-white p-1 rounded border grid grid-cols-3 gap-1 text-[10px] font-semibold">
+            <div class="flex items-center justify-between">
+              <span>जाणीव:</span>
+              <select id="${sub.id}_rub_aware" class="text-[9.5px] p-0.5">
+                <option value="Beginner">प्रारंभिक</option>
+                <option value="Proficient">प्रवीण</option>
+                <option value="Advanced">प्रगत</option>
+              </select>
+            </div>
+            <div class="flex items-center justify-between">
+              <span>संवेदनशीलता:</span>
+              <select id="${sub.id}_rub_sens" class="text-[9.5px] p-0.5">
+                <option value="Beginner">प्रारंभिक</option>
+                <option value="Proficient">प्रवीण</option>
+                <option value="Advanced">प्रगत</option>
+              </select>
+            </div>
+            <div class="flex items-center justify-between">
+              <span>सर्जनशीलता:</span>
+              <select id="${sub.id}_rub_creat" class="text-[9.5px] p-0.5">
+                <option value="Beginner">प्रारंभिक</option>
+                <option value="Proficient">प्रवीण</option>
+                <option value="Advanced">प्रगत</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderSummaryTable() {
+      const tbody = document.getElementById("summaryTableBody");
+      tbody.innerHTML = SUBJECTS.map(sub => `
+        <tr class="hover:bg-gray-50">
+          <td class="border p-1 font-bold">${sub.title.split("(")[0]}</td>
+          <td class="border p-0.5 text-center">
+            <select id="sum_${sub.id}_aware" class="text-[10px] font-semibold p-0.5">
+              <option value="Beginner">प्रारंभिक</option>
+              <option value="Proficient">प्रवीण</option>
+              <option value="Advanced">प्रगत</option>
+            </select>
+          </td>
+          <td class="border p-0.5 text-center">
+            <select id="sum_${sub.id}_sens" class="text-[10px] font-semibold p-0.5">
+              <option value="Beginner">प्रारंभिक</option>
+              <option value="Proficient">प्रवीण</option>
+              <option value="Advanced">प्रगत</option>
+            </select>
+          </td>
+          <td class="border p-0.5 text-center">
+            <select id="sum_${sub.id}_creat" class="text-[10px] font-semibold p-0.5">
+              <option value="Beginner">प्रारंभिक</option>
+              <option value="Proficient">प्रवीण</option>
+              <option value="Advanced">प्रगत</option>
+            </select>
+          </td>
+          <td class="border p-0.5">
+            <input type="text" id="sum_${sub.id}_note" class="w-full text-[10px] p-0.5 font-medium" placeholder="नोंद...">
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function updateCreditTable() {
+      const grade = document.getElementById("grade").value;
+      const ncrfLevel = grade === "3" ? 0.6 : (grade === "4" ? 0.8 : 1.0);
+      const tbody = document.getElementById("creditTableBody");
+      
+      tbody.innerHTML = SUBJECTS.map((sub, i) => {
+        const creditPts = (sub.defaultCredit * ncrfLevel).toFixed(2);
+        return `
+          <tr class="hover:bg-amber-50/50">
+            <td class="border p-1 text-left font-semibold">${i+1}. ${sub.title.split("(")[0]}</td>
+            <td class="border p-0.5 font-medium">${sub.defaultCredit}</td>
+            <td class="border p-0.5 font-medium">${ncrfLevel}</td>
+            <td class="border p-0.5 font-bold">${creditPts}</td>
+            <td class="border p-0.5"><input type="number" step="0.1" id="earned_credit_${sub.id}" value="${creditPts}" class="w-14 text-center text-xs p-0 font-extrabold text-emerald-800"></td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function calcAtt() {
+      let totalSch = 0;
+      let totalPre = 0;
+      for (let i = 0; i < 12; i++) {
+        const sch = parseFloat(document.getElementById(`sch_day_${i}`).value) || 0;
+        const pre = parseFloat(document.getElementById(`pre_day_${i}`).value) || 0;
+        totalSch += sch;
+        totalPre += pre;
+        const percEl = document.getElementById(`att_perc_${i}`);
+        if (sch > 0) {
+          const p = ((pre / sch) * 100).toFixed(0);
+          percEl.innerText = p + "%";
+        } else {
+          percEl.innerText = "-";
+        }
+      }
+      document.getElementById("totalSchoolDays").innerText = totalSch;
+      document.getElementById("totalPresentDays").innerText = totalPre;
+      const totPerc = totalSch > 0 ? ((totalPre / totalSch) * 100).toFixed(1) : 0;
+      document.getElementById("totalAttPerc").innerText = totPerc + "%";
+    }
+
+    function previewPhoto(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          document.getElementById("photoPreview").innerHTML = `<img src="${evt.target.result}" class="w-full h-full object-cover">`;
+          if (studentsDatabase[currentStudentIndex]) {
+            studentsDatabase[currentStudentIndex].photoData = evt.target.result;
+            saveAllToStorage();
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function exportDataJSON() {
+      saveCurrentStudentData(false);
+      const raw = localStorage.getItem("hpc_preparatory_multi_students") || "[]";
+      const blob = new Blob([raw], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `HPC_Preparatory_A4_Print_Data_Marathi.json`;
+      a.click();
+    }
+  </script>
+</body>
+</html>
